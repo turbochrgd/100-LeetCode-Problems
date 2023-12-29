@@ -1,34 +1,37 @@
 class Solution {
-    private final String[] LESS_THAN_20 = {"", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight",
-    "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"};
-    private final String[] TENS = {"", "Ten", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"};
-    private final String[] THOUSANDS = {"", "Thousand", "Million", "Billion"};
+    String[] ones = {"", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven",
+            "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"};
+    String[] tens = {"", "Ten", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"};
+    public static final int TEN = 10;
+    public static final int HUNDRED = 100;
+    public static final int THOUSAND = 1000;
+    public static final int MILLION = 1000000;
+    public static final int BILLION = 1000000000;
 
     public String numberToWords(int num) {
-        if (num == 0) return "Zero";
-
-        int i = 0;
-        String words = "";
-        
-        while (num > 0) {
-            if (num % 1000 != 0)
-                words = helper(num % 1000) +THOUSANDS[i] + " " + words;
-            num /= 1000;
-            i++;
+        if (num == 0) {
+            return "Zero";
         }
-        
-        return words.trim();
+
+        return helper(num).trim();
     }
 
     private String helper(int num) {
-        if (num == 0)
-            return "";
-        else if (num < 20)
-            return LESS_THAN_20[num] + " ";
-        else if (num < 100)
-            return TENS[num / 10] + " " + helper(num % 10);
-        else
-            return LESS_THAN_20[num / 100] + " Hundred " + helper(num % 100);
+        StringBuilder sb = new StringBuilder();
+        if (num >= BILLION) {
+            sb.append(helper(num / BILLION)).append(" Billion ").append(helper(num % BILLION));
+        } else if (num >= MILLION) {
+            sb.append(helper(num / MILLION)).append(" Million ").append(helper(num % MILLION));
+        } else if (num >= THOUSAND) {
+            sb.append(helper(num / THOUSAND)).append(" Thousand ").append(helper(num % THOUSAND));
+        } else if (num >= HUNDRED) {
+            sb.append(helper(num / HUNDRED)).append(" Hundred ").append(helper(num % HUNDRED));
+        } else if (num >= 20) {
+            sb.append(tens[num / TEN]).append(" ").append(helper(num % TEN));
+        } else {
+            sb.append(ones[num]);
+        }
+        return sb.toString().trim();
     }
 }
 
